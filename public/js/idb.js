@@ -7,7 +7,7 @@ const request = indexedDB.open('budget_tracker', 1);
 request.onupgradeneeded = function(event) {
     // save a reference to the database 
     const db = event.target.result;
-    // create an object store (table) called `new_pizza`, set it to have an auto incrementing primary key of sorts 
+    // create an object store (table) called `new_transaction`, set it to have an auto incrementing primary key of sorts 
     db.createObjectStore('new_transaction', { autoIncrement: true });
   };
 
@@ -28,12 +28,12 @@ request.onsuccess = function(event) {
     console.log(event.target.errorCode);
   };
 
-  // This function will be executed if we attempt to submit a new pizza and there's no internet connection
+  // This function will be executed if we attempt to submit a new transaction and there's no internet connection
 function saveRecord(record) {
     // open a new transaction with the database with read and write permissions 
     const transaction = db.transaction(['new_transaction'], 'readwrite');
   
-    // access the object store for `new_pizza`
+    // access the object store for `new_transaction`
     const transactionObjectStore = transaction.objectStore('new_transaction');
   
     // add record to your store with add method
@@ -49,7 +49,6 @@ function saveRecord(record) {
     // get all records from store and set to a variable
     const getAll = transactionObjectStore.getAll();
   
-    // more to come...
     // upon a successful .getAll() execution, run this function
 getAll.onsuccess = function() {
     // if there was data in indexedDb's store, let's send it to the api server
@@ -69,7 +68,7 @@ getAll.onsuccess = function() {
           }
           // open one more transaction
           const transaction = db.transaction(['new_transaction'], 'readwrite');
-          // access the new_pizza object store
+          // access the new_transaction object store
           const transactionObjectStore = transaction.objectStore('new_transaction');
           // clear all items in your store
           transactionObjectStore.clear();
