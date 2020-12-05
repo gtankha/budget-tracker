@@ -36,7 +36,6 @@ self.addEventListener('activate', function (e) {
         return key.indexOf(APP_PREFIX);
       });
       cacheKeeplist.push(CACHE_NAME);
-
       return Promise.all(
         keyList.map(function (key, i) {
           if (cacheKeeplist.indexOf(key) === -1) {
@@ -51,9 +50,7 @@ self.addEventListener('activate', function (e) {
 
 // check to see if event is an api request, cache that request (if online) or use the cache (if offline)
 self.addEventListener('fetch', function (e) {
-  console.log('fetch request : ' + e.request.url)
   if (e.request.url.includes("/api")) {
-
     e.respondWith(
       caches.open(CACHE_NAME).then(cache => {
         return fetch(e.request).then(response => {
@@ -67,24 +64,19 @@ self.addEventListener('fetch', function (e) {
           .catch(err => {
             return cache.match(e.request);
           });
-
       })
         .catch(err => console.log(err))
     )
-
     return;
   }
 
   e.respondWith(
     fetch(e.request).catch(function () {
-
       return caches.match(e.request).then(function (response) {
         if (response) {
           return response;
-
         }
         else if (e.request.headers.get("accept").includes("text/html")) {
-
           return caches.match("/")
         }
 
